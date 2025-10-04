@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Label } from './ui/label';
 import { Checkbox } from './ui/checkbox';
 import { Slider } from './ui/slider';
@@ -6,12 +6,14 @@ import { Switch } from './ui/switch';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Input } from './ui/input';
+import type { FilterOptions } from './SearchResultsPage';
 
 interface FilterSidebarProps {
-  onFilterChange?: (filters: any) => void;
+  onFilterChange?: (filters: FilterOptions) => void;
+  onApplyFilters?: () => void;
 }
 
-export function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
+export function FilterSidebar({ onFilterChange, onApplyFilters }: FilterSidebarProps) {
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [activityDays, setActivityDays] = useState([30]);
   const [healthRange, setHealthRange] = useState([0, 100]);
@@ -28,6 +30,21 @@ export function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
     { name: 'Rust', count: 78 },
     { name: 'Go', count: 92 },
   ];
+
+  useEffect(() => {
+    if (onFilterChange) {
+      onFilterChange({
+        languages: selectedLanguages,
+        activityDays: activityDays[0],
+        healthRange: [healthRange[0], healthRange[1]],
+        hasGoodFirstIssues,
+        minIssues: parseInt(minIssues) || 0,
+        hasCi,
+        hasDocs,
+        license,
+      });
+    }
+  }, [selectedLanguages, activityDays, healthRange, hasGoodFirstIssues, minIssues, hasCi, hasDocs, license]);
 
   const handleLanguageToggle = (lang: string) => {
     setSelectedLanguages(prev =>
@@ -54,6 +71,13 @@ export function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
           Clear all
         </Button>
       </div>
+
+      <Button
+        onClick={onApplyFilters}
+        className="w-full mb-6"
+      >
+        Apply Filters
+      </Button>
 
       <div className="space-y-6">
         <div>

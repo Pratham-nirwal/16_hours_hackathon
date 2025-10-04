@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, Home, Search, Bookmark, GitPullRequest } from 'lucide-react';
+import { Menu, Chrome as Home, Search, Bookmark, GitPullRequest } from 'lucide-react';
 import { LandingPage } from './components/LandingPage';
 import { SearchResultsPage } from './components/SearchResultsPage';
 import { RepositoryDetailPage } from './components/RepositoryDetailPage';
@@ -137,7 +137,6 @@ export default function App() {
 
         {currentPage === 'search' && (
           <SearchResultsPage
-            repositories={mockRepositories}
             initialQuery={searchQuery}
             onViewDetails={handleViewDetails}
             onCompare={handleCompare}
